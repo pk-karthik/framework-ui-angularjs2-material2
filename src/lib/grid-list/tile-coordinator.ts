@@ -1,3 +1,4 @@
+import {QueryList} from '@angular/core';
 import {MdGridTile} from './grid-tile';
 import {MdGridTileTooWideError} from './grid-list-errors';
 
@@ -15,6 +16,8 @@ import {MdGridTileTooWideError} from './grid-list-errors';
  * column are already occupied; zero indicates an empty cell. Moving "down" to the next row
  * decrements each value in the tracking array (indicating that the column is one cell closer to
  * being free).
+ *
+ * @docs-private
  */
 export class TileCoordinator {
   /** Tracking array (see class description). */
@@ -41,7 +44,7 @@ export class TileCoordinator {
   /** The computed (row, col) position of each tile (the output). */
   positions: TilePosition[];
 
-  constructor(numColumns: number, tiles: MdGridTile[]) {
+  constructor(numColumns: number, tiles: QueryList<MdGridTile>) {
     this.tracker = new Array(numColumns);
     this.tracker.fill(0, 0, this.tracker.length);
 
@@ -134,7 +137,10 @@ export class TileCoordinator {
   }
 }
 
-/** Simple data structure for tile position (row, col). */
+/**
+ * Simple data structure for tile position (row, col).
+ * @docs-private
+ */
 export class TilePosition {
   constructor(public row: number, public col: number) {}
 }

@@ -10,19 +10,18 @@ import {
   QueryList,
   Renderer,
   ElementRef,
-  Optional
+  Optional,
 } from '@angular/core';
 import {MdGridTile, MdGridTileText} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
-import {
-    TileStyler,
-    FitTileStyler,
-    RatioTileStyler,
-    FixedTileStyler
-} from './tile-styler';
+import {TileStyler, FitTileStyler, RatioTileStyler, FixedTileStyler} from './tile-styler';
 import {MdGridListColsError} from './grid-list-errors';
-import {Dir, MdLineModule} from '@angular2-material/core';
-import {coerceToString, coerceToNumber} from './grid-list-measure';
+import {Dir, MdLineModule, CompatibilityModule} from '../core';
+import {
+  coerceToString,
+  coerceToNumber,
+} from './grid-list-measure';
+
 
 // TODO(kara): Conditional (responsive) column count / row size.
 // TODO(kara): Re-layout on window resize / media change (debounced).
@@ -32,9 +31,12 @@ const MD_FIT_MODE = 'fit';
 
 @Component({
   moduleId: module.id,
-  selector: 'md-grid-list',
+  selector: 'md-grid-list, mat-grid-list',
   templateUrl: 'grid-list.html',
   styleUrls: ['grid-list.css'],
+  host: {
+    'role': 'list'
+  },
   encapsulation: ViewEncapsulation.None,
 })
 export class MdGridList implements OnInit, AfterContentChecked {
@@ -63,23 +65,15 @@ export class MdGridList implements OnInit, AfterContentChecked {
       private _element: ElementRef,
       @Optional() private _dir: Dir) {}
 
+  /** Amount of columns in the grid list. */
   @Input()
-  get cols() {
-    return this._cols;
-  }
+  get cols() { return this._cols; }
+  set cols(value: any) { this._cols = coerceToNumber(value); }
 
-  set cols(value: any) {
-    this._cols = coerceToNumber(value);
-  }
-
-  @Input('gutterSize')
-  get gutterSize() {
-    return this._gutter;
-  }
-
-  set gutterSize(value: any) {
-    this._gutter = coerceToString(value);
-  }
+  /** Size of the grid list's gutter in pixels. */
+  @Input()
+  get gutterSize() { return this._gutter; }
+  set gutterSize(value: any) { this._gutter = coerceToString(value); }
 
   /** Set internal representation of row height from the user-provided value. */
   @Input()
@@ -88,7 +82,6 @@ export class MdGridList implements OnInit, AfterContentChecked {
     this._setTileStyler();
   }
 
-  /** TODO: internal */
   ngOnInit() {
     this._checkCols();
     this._checkRowHeight();
@@ -97,7 +90,6 @@ export class MdGridList implements OnInit, AfterContentChecked {
   /**
    * The layout calculation is fairly cheap if nothing changes, so there's little cost
    * to run it frequently.
-   * TODO: internal
    */
   ngAfterContentChecked() {
     this._layoutTiles();
@@ -121,7 +113,7 @@ export class MdGridList implements OnInit, AfterContentChecked {
   private _setTileStyler(): void {
     if (this._rowHeight === MD_FIT_MODE) {
       this._tileStyler = new FitTileStyler();
-    } else if (this._rowHeight && this._rowHeight.match(/:/g)) {
+    } else if (this._rowHeight && this._rowHeight.indexOf(':') > -1) {
       this._tileStyler = new RatioTileStyler(this._rowHeight);
     } else {
       this._tileStyler = new FixedTileStyler(this._rowHeight);
@@ -130,16 +122,15 @@ export class MdGridList implements OnInit, AfterContentChecked {
 
   /** Computes and applies the size and position for all children grid tiles. */
   private _layoutTiles(): void {
-    let tiles = this._tiles.toArray();
-    let tracker = new TileCoordinator(this.cols, tiles);
+    let tracker = new TileCoordinator(this.cols, this._tiles);
     let direction = this._dir ? this._dir.value : 'ltr';
     this._tileStyler.init(this.gutterSize, tracker, this.cols, direction);
 
-    for (let i = 0; i < tiles.length; i++) {
-      let pos = tracker.positions[i];
-      let tile = tiles[i];
+    this._tiles.forEach((tile, index) => {
+      let pos = tracker.positions[index];
       this._tileStyler.setStyle(tile, pos.row, pos.col);
-    }
+    });
+
     this._setListStyle(this._tileStyler.getComputedHeight());
   }
 
@@ -153,11 +144,18 @@ export class MdGridList implements OnInit, AfterContentChecked {
 
 
 @NgModule({
-  imports: [MdLineModule],
-  exports: [MdGridList, MdGridTile, MdGridTileText, MdLineModule],
+  imports: [MdLineModule, CompatibilityModule],
+  exports: [
+    MdGridList,
+    MdGridTile,
+    MdGridTileText,
+    MdLineModule,
+    CompatibilityModule,
+  ],
   declarations: [MdGridList, MdGridTile, MdGridTileText],
 })
 export class MdGridListModule {
+  /** @deprecated */
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: MdGridListModule,

@@ -1,5 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {MdIconRegistry} from '@angular2-material/icon';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MdIconRegistry} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -10,10 +11,12 @@ import {MdIconRegistry} from '@angular2-material/icon';
   encapsulation: ViewEncapsulation.None,
 })
 export class IconDemo {
-  constructor(mdIconRegistry: MdIconRegistry) {
+  constructor(mdIconRegistry: MdIconRegistry, sanitizer: DomSanitizer) {
     mdIconRegistry
-        .addSvgIcon('thumb-up', '/icon/assets/thumbup-icon.svg')
-        .addSvgIconSetInNamespace('core', '/icon/assets/core-icon-set.svg')
+        .addSvgIcon('thumb-up',
+            sanitizer.bypassSecurityTrustResourceUrl('/icon/assets/thumbup-icon.svg'))
+        .addSvgIconSetInNamespace('core',
+            sanitizer.bypassSecurityTrustResourceUrl('/icon/assets/core-icon-set.svg'))
         .registerFontClassAlias('fontawesome', 'fa');
   }
 }

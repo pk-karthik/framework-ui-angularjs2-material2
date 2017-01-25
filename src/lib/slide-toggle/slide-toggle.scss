@@ -1,43 +1,24 @@
-@import 'variables';
-@import 'mixins';
-@import 'elevation';
+@import '../core/style/variables';
+@import '../core/ripple/ripple';
+@import '../core/style/elevation';
+@import '../core/a11y/a11y';
 
-//TODO(): remove the default theme.
-@import 'default-theme';
 
 $md-slide-toggle-width: 36px !default;
 $md-slide-toggle-height: 24px !default;
 $md-slide-toggle-bar-height: 14px !default;
 $md-slide-toggle-thumb-size: 20px !default;
 $md-slide-toggle-margin: 16px !default;
+$md-slide-toggle-spacing: 8px !default;
 
-@mixin md-switch-checked($palette) {
-  &.md-checked {
-    .md-slide-toggle-thumb {
-      background-color: md-color($palette);
-    }
 
-    .md-slide-toggle-bar {
-      background-color: md-color($palette, 0.5);
-    }
-  }
-}
-
-@mixin md-switch-ripple($palette) {
+@mixin md-switch-ripple() {
   // Temporary ripple effect for the thumb of the slide-toggle.
   // Bind to the parent selector and specify the current palette.
-  @include md-temporary-ink-ripple(slide-toggle, true, $palette);
-
-  &.md-slide-toggle-focused {
-    &:not(.md-checked) .md-ink-ripple {
-      // When the slide-toggle is not checked and it shows its focus indicator, it should use a 12% opacity
-      // of black in light themes and 12% of white in dark themes.
-      background-color: md-color($md-foreground, divider);
-    }
-  }
+  @include md-temporary-ink-ripple(slide-toggle, true);
 }
 
-:host {
+md-slide-toggle {
   display: flex;
   height: $md-slide-toggle-height;
 
@@ -45,6 +26,9 @@ $md-slide-toggle-margin: 16px !default;
   line-height: $md-slide-toggle-height;
 
   white-space: nowrap;
+
+  // Disable user selection to ensure that dragging is smooth without grabbing
+  // some elements accidentally.
   user-select: none;
 
   outline: none;
@@ -55,33 +39,12 @@ $md-slide-toggle-margin: 16px !default;
     }
   }
 
-  @include md-switch-checked($md-accent);
-  @include md-switch-ripple($md-accent);
-
-  &.md-primary {
-    @include md-switch-checked($md-primary);
-    @include md-switch-ripple($md-primary);
-  }
-
-  &.md-warn {
-    @include md-switch-checked($md-warn);
-    @include md-switch-ripple($md-warn);
-  }
+  @include md-switch-ripple();
 
   &.md-disabled {
 
     .md-slide-toggle-label, .md-slide-toggle-container {
       cursor: default;
-    }
-
-    .md-slide-toggle-thumb {
-      // The thumb of the slide-toggle always uses the hue 400 of the grey palette in dark or light themes.
-      // Since this is very specific to the slide-toggle component, we're not providing
-      // it in the background palette.
-      background-color: md-color($md-grey, 400);
-    }
-    .md-slide-toggle-bar {
-      background-color: md-color($md-foreground, divider);
     }
   }
 }
@@ -110,9 +73,13 @@ $md-slide-toggle-margin: 16px !default;
   height: $md-slide-toggle-height;
 
   position: relative;
-  user-select: none;
 
-  margin-right: 8px;
+  margin-right: $md-slide-toggle-spacing;
+
+  [dir='rtl'] & {
+    margin-left: $md-slide-toggle-spacing;
+    margin-right: 0;
+  }
 }
 
 // The thumb container is responsible for the dragging functionality.
@@ -149,8 +116,12 @@ $md-slide-toggle-margin: 16px !default;
   width: $md-slide-toggle-thumb-size;
   border-radius: 50%;
 
-  background-color: md-color($md-background, background);
   @include md-elevation(1);
+
+  @include cdk-high-contrast {
+    background: #fff;
+    border: solid 1px #000;
+  }
 }
 
 // Horizontal bar for the slide-toggle.
@@ -163,19 +134,20 @@ $md-slide-toggle-margin: 16px !default;
   width: $md-slide-toggle-width - 2px;
   height: $md-slide-toggle-bar-height;
 
-  // The bar of the slide-toggle always uses the hue 500 of the grey palette in dark or light themes.
-  // Since this is very specific to the slide-toggle component, we're not providing
-  // it in the background palette.
-  background-color: md-color($md-grey, 500);
-
   border-radius: 8px;
+
+  @include cdk-high-contrast {
+    background: #fff;
+  }
 }
 
-// The slide toggle shows a visually hidden checkbox inside of the component.
-// This checkbox allows us to take advantage of the browsers support.
-// Like accessibility and keyboard interaction.
-.md-slide-toggle-checkbox {
-  @include md-visually-hidden();
+// The slide toggle shows a visually hidden input inside of the component, which is used
+// to take advantage of the native browser functionality.
+.md-slide-toggle-input {
+  // Move the input to the bottom and in the middle of the thumb.
+  // Visual improvement to properly show browser popups when being required.
+  bottom: 0;
+  left: $md-slide-toggle-thumb-size / 2;
 }
 
 .md-slide-toggle-bar,

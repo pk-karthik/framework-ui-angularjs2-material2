@@ -13,7 +13,7 @@ import {
     ComponentPortal,
     Portal,
     TemplatePortalDirective,
-} from '@angular2-material/core';
+} from '@angular/material';
 
 
 @Component({
@@ -74,6 +74,21 @@ export class OverlayDemo {
     let overlayRef = this.overlay.create(config);
     overlayRef.attach(new ComponentPortal(SpagettiPanel, this.viewContainerRef));
   }
+
+  openPanelWithBackdrop() {
+    let config = new OverlayState();
+
+    config.positionStrategy = this.overlay.position()
+      .global()
+      .centerHorizontally();
+    config.hasBackdrop = true;
+    config.backdropClass = 'cdk-overlay-transparent-backdrop';
+
+    let overlayRef = this.overlay.create(config);
+    overlayRef.attach(this.templatePortals.first);
+    overlayRef.backdropClick().subscribe(() => overlayRef.detach());
+  }
+
 }
 
 /** Simple component to load into an overlay */

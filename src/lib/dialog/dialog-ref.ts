@@ -1,4 +1,4 @@
-import {OverlayRef} from '@angular2-material/core';
+import {OverlayRef} from '../core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
@@ -29,7 +29,9 @@ export class MdDialogRef<T> {
     this._afterClosed.complete();
   }
 
-  /** Gets an observable that is notified when the dialog is finished closing. */
+  /**
+   * Gets an observable that is notified when the dialog is finished closing.
+   */
   afterClosed(): Observable<any> {
     return this._afterClosed.asObservable();
   }

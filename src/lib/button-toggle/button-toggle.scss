@@ -1,37 +1,39 @@
-@import 'elevation';
-@import 'default-theme';
-@import 'palette';
-@import 'mixins';
+@import '../core/style/elevation';
+
 
 $md-button-toggle-padding: 0 16px !default;
 $md-button-toggle-line-height: 36px !default;
-$md-button-toggle-border-radius: 3px !default;
+$md-button-toggle-border-radius: 2px !default;
 
 md-button-toggle-group {
   @include md-elevation(2);
   position: relative;
   display: inline-flex;
+  flex-direction: row;
+
   border-radius: $md-button-toggle-border-radius;
+
   cursor: pointer;
   white-space: nowrap;
 }
 
+.md-button-toggle-vertical {
+  flex-direction: column;
 
-.md-button-toggle-checked .md-button-toggle-label-content {
-  background-color: md-color($md-grey, 300);
+  .md-button-toggle-label-content {
+    // Vertical button toggles shouldn't be an inline-block, because the toggles should
+    // fill the available width in the group.
+    display: block;
+  }
 }
 
+
 .md-button-toggle-disabled .md-button-toggle-label-content {
-  background-color: md-color($md-foreground, disabled);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 md-button-toggle {
   white-space: nowrap;
-}
-
-.md-button-toggle-input {
-  @include md-visually-hidden;
 }
 
 .md-button-toggle-label-content {
@@ -39,6 +41,7 @@ md-button-toggle {
   line-height: $md-button-toggle-line-height;
   padding: $md-button-toggle-padding;
   cursor: pointer;
+  user-select: none;
 }
 
 .md-button-toggle-label-content > * {

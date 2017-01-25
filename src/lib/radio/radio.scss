@@ -1,8 +1,9 @@
-@import 'default-theme';
-@import 'variables';
-@import 'mixins';
+@import '../core/style/variables';
+@import '../core/ripple/ripple';
+
 
 $md-radio-size: $md-toggle-size !default;
+$md-radio-ripple-size: $md-radio-size * 0.75;
 
 // Top-level host container.
 md-radio-button {
@@ -30,7 +31,6 @@ md-radio-button {
 
 // The outer circle for the radio, always present.
 .md-radio-outer-circle {
-  border-color: md-color($md-foreground, secondary-text);
   border: solid 2px;
   border-radius: 50%;
   box-sizing: border-box;
@@ -40,19 +40,10 @@ md-radio-button {
   top: 0;
   transition: border-color ease 280ms;
   width: $md-radio-size;
-
-  .md-radio-checked & {
-    border-color: md-color($md-accent);
-  }
-
-  .md-radio-disabled & {
-    border-color: md-color($md-foreground, disabled);
-  }
 }
 
 // The inner circle for the radio, shown when checked.
 .md-radio-inner-circle {
-  background-color: md-color($md-accent);
   border-radius: 50%;
   box-sizing: border-box;
   height: $md-radio-size;
@@ -65,10 +56,6 @@ md-radio-button {
 
   .md-radio-checked & {
     transform: scale(0.5);
-  }
-
-  .md-radio-disabled & {
-    background-color: md-color($md-foreground, disabled);
   }
 }
 
@@ -87,7 +74,7 @@ md-radio-button {
 }
 
 // Alignment.
-.md-radio-label-content.md-radio-align-end {
+.md-radio-label-content.md-radio-label-before {
   order: -1;
   padding-left: 0;
   padding-right: $md-toggle-padding;
@@ -98,15 +85,18 @@ md-radio-button {
   }
 }
 
-// Underlying native input element.
-// Visually hidden but still able to respond to focus.
-.md-radio-input {
-  @include md-visually-hidden;
-}
-
 // Basic disabled state.
 .md-radio-disabled, .md-radio-disabled .md-radio-label {
   cursor: default;
 }
 
-@include md-temporary-ink-ripple(radio);
+.md-radio-ripple {
+  position: absolute;
+  left: -$md-radio-ripple-size;
+  top: -$md-radio-ripple-size;
+  right: -$md-radio-ripple-size;
+  bottom: -$md-radio-ripple-size;
+  border-radius: 50%;
+  z-index: 1;
+  pointer-events: none;
+}
