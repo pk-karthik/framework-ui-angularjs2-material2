@@ -1,10 +1,11 @@
-import {browser, Key, protractor} from 'protractor';
+import {Key, protractor} from 'protractor';
 import {MenuPage} from './menu-page';
 import {expectToExist, expectAlignedWith, expectFocusOn, expectLocation} from '../../util/asserts';
 import {pressKeys} from '../../util/actions';
+import {screenshot} from '../../screenshot';
 
 describe('menu', () => {
-  const menuSelector = '.md-menu-panel';
+  const menuSelector = '.mat-menu-panel';
   let page: MenuPage;
 
   beforeEach(() => page = new MenuPage());
@@ -15,28 +16,33 @@ describe('menu', () => {
 
     expectToExist(menuSelector);
     expect(page.menu().getText()).toEqual('One\nTwo\nThree\nFour');
+    screenshot();
   });
 
   it('should close menu when menu item is clicked', () => {
     page.trigger().click();
     page.items(0).click();
     expectToExist(menuSelector, false);
+    screenshot();
   });
 
   it('should run click handlers on regular menu items', () => {
     page.trigger().click();
     page.items(0).click();
     expect(page.getResultText()).toEqual('one');
+    screenshot('one');
 
     page.trigger().click();
     page.items(1).click();
     expect(page.getResultText()).toEqual('two');
+    screenshot('two');
   });
 
   it('should run not run click handlers on disabled menu items', () => {
     page.trigger().click();
     page.items(2).click();
     expect(page.getResultText()).toEqual('');
+    screenshot();
   });
 
   it('should support multiple triggers opening the same menu', () => {
@@ -60,7 +66,7 @@ describe('menu', () => {
   it('should mirror classes on host to menu template in overlay', () => {
     page.trigger().click();
     page.menu().getAttribute('class').then((classes: string) => {
-      expect(classes).toContain('md-menu-panel custom');
+      expect(classes).toContain('mat-menu-panel custom');
     });
   });
 

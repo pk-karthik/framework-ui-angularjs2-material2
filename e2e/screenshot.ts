@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as gulp from 'gulp';
 import * as path from 'path';
 import {browser} from 'protractor';
 
@@ -35,8 +34,8 @@ export class Screenshot {
     return path.resolve(OUTPUT_DIR, this.filename);
   }
 
-  constructor(id: string) {
-    this.id = `${currentJasmineSpecName} ${id}`;
+  constructor(id?: string) {
+    this.id = id ? `${currentJasmineSpecName} ${id}` : currentJasmineSpecName;
     browser.takeScreenshot().then(png => this.storeScreenshot(png));
   }
 
@@ -52,7 +51,7 @@ export class Screenshot {
   }
 }
 
-export function screenshot(id: string) {
+export function screenshot(id?: string) {
   if (process.env['TRAVIS']) {
     return new Screenshot(id);
   }

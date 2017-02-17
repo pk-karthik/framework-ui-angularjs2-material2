@@ -10,7 +10,6 @@ import {LiveAnnouncerDemo} from '../live-announcer/live-announcer-demo';
 import {ListDemo} from '../list/list-demo';
 import {IconDemo} from '../icon/icon-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
-import {InputDemo} from '../input/input-demo';
 import {CheckboxDemo} from '../checkbox/checkbox-demo';
 import {OverlayDemo} from '../overlay/overlay-demo';
 import {PortalDemo} from '../portal/portal-demo';
@@ -32,7 +31,8 @@ import {ProjectionDemo} from '../projection/projection-demo';
 import {TABS_DEMO_ROUTES} from '../tabs/routes';
 import {PlatformDemo} from '../platform/platform-demo';
 import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
-import {InputContainerDemo} from '../input/input-container-demo';
+import {InputDemo} from '../input/input-demo';
+import {StyleDemo} from '../style/style-demo';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: Home},
@@ -52,7 +52,6 @@ export const DEMO_APP_ROUTES: Routes = [
   {path: 'overlay', component: OverlayDemo},
   {path: 'checkbox', component: CheckboxDemo},
   {path: 'input', component: InputDemo},
-  {path: 'input-container', component: InputContainerDemo},
   {path: 'toolbar', component: ToolbarDemo},
   {path: 'icon', component: IconDemo},
   {path: 'list', component: ListDemo},
@@ -67,5 +66,6 @@ export const DEMO_APP_ROUTES: Routes = [
   {path: 'dialog', component: DialogDemo},
   {path: 'tooltip', component: TooltipDemo},
   {path: 'snack-bar', component: SnackBarDemo},
-  {path: 'platform', component: PlatformDemo}
+  {path: 'platform', component: PlatformDemo},
+  {path: 'style', component: StyleDemo},
 ];
